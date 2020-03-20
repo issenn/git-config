@@ -1,0 +1,40 @@
+# This is Git's per-user configuration file.
+[core]
+    pager = diff-so-fancy | less --tabs=4 -RFX
+    autocrlf = input
+    # sshCommand = ssh -vvv
+[user]
+# Please adapt and uncomment the following lines:
+    name = issenn
+    email = issennknight@gmail.com
+[url "git@github.com:"]
+    insteadOf = "https://github.com/"
+# [http]
+#     proxy = http://127.0.0.1:1087
+# [https]
+#     proxy = "socks5://127.0.0.1:7891"
+[pager]
+    diff = diff-so-fancy | less --tabs=1,5 -RFX
+    show = diff-so-fancy | less --tabs=1,5 -RFX
+[color]
+    ui = true
+[color "diff-highlight"]
+    oldNormal = red bold
+    oldHighlight = red bold 52
+    newNormal = green bold
+    newHighlight = green bold 22
+[color "diff"]
+    meta = yellow
+    frag = magenta bold
+    commit = yellow bold
+    old = red bold
+    new = green bold
+    whitespace = red reverse
+# [diff-so-fancy]
+#     markEmptyLines = false
+#     changeHunkIndicators = false
+#     stripLeadingSymbols = false
+#     useUnicodeRuler = false
+#     rulerWidth = 47
+[help]
+    autocorrect = 1
