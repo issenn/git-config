@@ -2,6 +2,7 @@
 [core]
     pager = diff-so-fancy | less --tabs=4 -RFX
     autocrlf = input
+    quotepath = false
     # sshCommand = ssh -vvv
 [user]
 # Please adapt and uncomment the following lines:
@@ -38,3 +39,9 @@
 #     rulerWidth = 47
 [help]
     autocorrect = 1
+[gui]
+    encoding = utf-8
+[i18n "commit"]
+    encoding = utf-8
+[i18n]
+    logoutputencoding = utf-8
