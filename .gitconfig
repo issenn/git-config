@@ -10,10 +10,10 @@
     email = issennknight@gmail.com
 [url "git@github.com:"]
     insteadOf = "https://github.com/"
-# [http]
-#     proxy = http://127.0.0.1:1087
-# [https]
-#     proxy = "socks5://127.0.0.1:7891"
+[http "https://github.com"]
+    proxy = "socks5h://127.0.0.1:7891"  # 基于http的git与基于socks5的代理
+    # proxy = "http://127.0.0.1:7890"   # 基于http的git与基于http的代理
+    postBuffer = 524288000              # 智能HTTP传输所使用的缓冲区
 [pager]
     diff = diff-so-fancy | less --tabs=1,5 -RFX
     show = diff-so-fancy | less --tabs=1,5 -RFX
