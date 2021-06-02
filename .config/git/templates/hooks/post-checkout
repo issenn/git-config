@@ -1,0 +1,71 @@
+#!/usr/bin/env zsh
+
+# checkout hook to locally set user name and email based on user defined patterns
+# The patterns are matched against the clone url.
+#
+# Based on http://www.dvratil.cz/2015/12/git-trick-628-automatically-set-commit-author-based-on-repo-url/
+# https://git-scm.com/docs/git-config
+# https://git-scm.com/docs/githooks
+
+function warn {
+  echo -e "\n$* Email and author not initialized in local config!"
+}
+
+GIT_CONFIG_PATH="$(git config --local include.path)"
+EMAIL="$(git config --local user.email)"
+NAME="$(git config --local user.name)"
+
+if [[
+    # $1 != "0000000000000000000000000000000000000000" || \
+    -n "${GIT_CONFIG_PATH}" || -n "${EMAIL}" || -n "${NAME}" ]];
+then
+  exit 0
+fi
+
+# get remote name:
+#   only one: take it
+#   more: take "origin", or fail
+remote="$([[ $(git remote | wc -l) -eq 1 ]] && git remote || git remote | grep "^origin$")"
+
+if [[ -z "${remote}" ]]; then
+  warn "Failed to detect remote."
+  exit 0
+fi
+
+url="$(git config --local remote.${remote}.url)"
+
+if [[ ! -f "${XDG_CONFIG_HOME:-${HOME}/.config}/git/.git-clone-init" ]]; then
+  cat << INPUT > "${XDG_CONFIG_HOME:-${HOME}/.config}/git/.git-clone-init"
+#!/usr/bin/env zsh
+
+
+case "\${url}" in
+  *@github.com:*  ) EMAIL=""; NAME=""; GIT_CONFIG_PATH="";;
+  *//github.com/* ) EMAIL=""; NAME=""; GIT_CONFIG_PATH="";;
+  * )               EMAIL=""; NAME=""; GIT_CONFIG_PATH="";;
+esac
+INPUT
+
+  warn "\nMissing file ~/.git-clone-init. Template created..."
+  exit 0
+fi
+
+source "${XDG_CONFIG_HOME:-${HOME}/.config}/git/.git-clone-init"
+
+if [[ -n "${GIT_CONFIG_PATH}" && -r "${GIT_CONFIG_PATH}" ]]; then
+  git config --local --add include.path "${GIT_CONFIG_PATH}"
+  EMAIL="$(git config user.email)"
+  NAME="$(git config user.name)"
+  echo -e "\nLocal identity for ${PWD##*/} set to \"${NAME} <${EMAIL}>\""
+  exit 0
+fi
+
+if [[ -z "${NAME}" || -z "${EMAIL}" ]]; then
+  warn "Failed to detect identity using ${XDG_CONFIG_HOME:-${HOME}/.config}/git/.git-clone-init."
+  exit 0
+fi
+
+git config --local user.email "${EMAIL}"
+git config --local user.name "${NAME}"
+
+echo -e "\nLocal identity for ${PWD##*/} set to \"${NAME} <${EMAIL}>\""
