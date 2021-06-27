@@ -2,3 +2,4 @@
 
 [include]
   path = config.d/base.git.config
+  path = config.d/diff-so-fancy.git.config
