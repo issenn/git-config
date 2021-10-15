@@ -7,13 +7,33 @@
 # https://git-scm.com/docs/git-config
 # https://git-scm.com/docs/githooks
 
-function warn {
-  echo -e "\n$* Email and author not initialized in local config!"
+
+# load loader
+. "${GIT_DIR}/lib/loader/loader.zsh"
+
+# include directories to search path
+loader_addpath "${GIT_DIR}/lib" "${GIT_DIR}/hooks"
+
+# init logger
+include "${GIT_DIR}/lib/logger/logger.zsh"
+
+# init env
+include "${GIT_DIR}/lib/env"
+
+
+readonly hook="$(realpath $0)"
+readonly hook_type="$(basename -- "$(realpath $0)")"
+
+
+debug "${hook_type}: Hello!"
+
+warnText() {
+  warn "$* Email and author not initialized in local config!"
 }
 
-GIT_CONFIG_PATH="$(git config --local include.path)"
-EMAIL="$(git config --local user.email)"
-NAME="$(git config --local user.name)"
+local GIT_CONFIG_PATH="$(git config --local include.path)"
+local EMAIL="$(git config --local user.email)"
+local NAME="$(git config --local user.name)"
 
 if [[
     # $1 != "0000000000000000000000000000000000000000" || \
@@ -28,7 +48,7 @@ fi
 remote="$([[ $(git remote | wc -l) -eq 1 ]] && git remote || git remote | grep "^origin$")"
 
 if [[ -z "${remote}" ]]; then
-  warn "Failed to detect remote."
+  warnText "Failed to detect remote."
   exit 0
 fi
 
@@ -46,7 +66,7 @@ case "\${url}" in
 esac
 INPUT
 
-  warn "\nMissing file ~/.git-clone-init. Template created..."
+  warnText "Missing file ~/.git-clone-init. Template created...\n"
   exit 0
 fi
 
@@ -61,11 +81,11 @@ if [[ -n "${GIT_CONFIG_PATH}" && -r "${GIT_CONFIG_PATH}" ]]; then
 fi
 
 if [[ -z "${NAME}" || -z "${EMAIL}" ]]; then
-  warn "Failed to detect identity using ${XDG_CONFIG_HOME:-${HOME}/.config}/git/.git-clone-init."
+  warnText "Failed to detect identity using ${XDG_CONFIG_HOME:-${HOME}/.config}/git/.git-clone-init."
   exit 0
 fi
 
 git config --local user.email "${EMAIL}"
 git config --local user.name "${NAME}"
 
-echo -e "\nLocal identity for ${PWD##*/} set to \"${NAME} <${EMAIL}>\""
+info "Local identity for ${PWD##*/} set to \"${NAME} <${EMAIL}>\""

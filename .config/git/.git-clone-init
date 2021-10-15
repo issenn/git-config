@@ -1,8 +1,1 @@
-#!/usr/bin/env zsh
-
-
-case "${url}" in
-  *@github.com:*  ) EMAIL=""; NAME=""; GIT_CONFIG_PATH="${XDG_CONFIG_HOME:-${HOME}/.config}/git/config.d/github.git.config";;
-  *//github.com/* ) EMAIL=""; NAME=""; GIT_CONFIG_PATH="${XDG_CONFIG_HOME:-${HOME}/.config}/git/config.d/github.git.config";;
-  * )               EMAIL=""; NAME=""; GIT_CONFIG_PATH="${XDG_CONFIG_HOME:-${HOME}/.config}/git/config.d/default.git.config";;
-esac
+../../.git-clone-init

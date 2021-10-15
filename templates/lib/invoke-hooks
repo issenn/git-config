@@ -1,0 +1,92 @@
+#!/usr/bin/env zsh
+
+
+readonly hook="$(realpath $0)"
+
+# default
+typeset -x -U -a HOOK_TYPES=(
+  applypatch-msg
+  pre-applypatch
+  post-applypatch
+  pre-commit
+  pre-merge-commit
+  prepare-commit-msg
+  commit-msg
+  post-commit
+  pre-rebase
+  post-checkout
+  post-merge
+  pre-push
+  pre-receive
+  update
+  proc-receive
+  post-receive
+  post-update
+  reference-transaction
+  push-to-checkout
+  pre-auto-gc
+  post-rewrite
+  sendemail-validate
+  fsmonitor-watchman
+  p4-changelist
+  p4-prepare-changelist
+  p4-post-changelist
+  p4-pre-submit
+  post-index-change
+)
+
+
+invokeClonedReposHookDir() {
+  [[ "${#@[@]}" -lt 1 ]] && return
+  [[ "${#@[@]}" -ge 1 ]] && {
+    debug "\n\t\$*: \t\t${*[*]}\n\tHOOK_TYPES: \t${HOOK_TYPES[*]}\n\t\$1: \t\t${1}\n";
+    [[ " ${HOOK_TYPES[*]} " =~ " ${1} " ]]
+  } || return
+  [[ "${#@[@]}" -eq 1 ]] && { local -r hook_type="$1"; local -r hook_dir="${GIT_DIR}/hooks/${1}.d"; local -r args }
+  [[ "${#@[@]}" -eq 2 ]] && { local -r hook_type="$1"; local -r hook_dir="$2"; local -r args }
+  [[ "${#@[@]}" -gt 2 ]] && { local -r hook_type="$1"; local -r hook_dir="$2"; local -r args="${@[@]:3}" }
+  debug "\n\thook_type: \t${hook_type}\n\thook_dir: \t${hook_dir}\n\targs: \t\t${args}\n"
+
+  if [[ -d ${hook_dir} ]]; then
+    local -r stdin=$(cat /dev/stdin)
+    debug "stdin: ${stdin}"
+
+    local hook; local exit_code
+    for hook in ${hook_dir}/*; do
+      debug "Running ${hook_type}/${hook##*/} hook"
+      [[ -x ${hook} ]] && chmod u+x "${hook}"
+      echo "${stdin}" | ${hook} ${args}
+
+      exit_code=$?
+
+      if [ $exit_code != 0 ]; then
+        exit $exit_code
+      fi
+    done
+  fi
+}
+
+invokeClonedReposHook() {
+  [[ "${#@[@]}" -lt 2 ]] && return
+  [[ "${#@[@]}" -ge 2 ]] && {
+    debug "\n\t\$*: \t\t${*[*]}\n\tHOOK_TYPES: \t${HOOK_TYPES[*]}\n\t\$1: \t\t${1}\n";
+    [[ " ${HOOK_TYPES[*]} " =~ " ${1} " ]]
+  } || return
+  [[ "${#@[@]}" -eq 2 ]] && { local -r hook_type="$1"; local -r hook="$2"; local -r args }
+  [[ "${#@[@]}" -gt 2 ]] && { local -r hook_type="$1"; local -r hook="$2"; local -r args="${@[@]:3}" }
+  debug "\n\thook_type: \t${hook_type}\n\thook: \t${hook}\n\targs: \t\t${args}\n"
+
+  test ! -e "${hook}" && return
+  local -r stdin=$(cat /dev/stdin)
+  debug "stdin: ${stdin}"
+  local exit_code
+  debug "Running ${hook_type}/${hook##*/} hook"
+  [[ -x ${hook} ]] && chmod u+x "${hook}"
+  echo "${stdin}" | ${hook} ${args}
+
+  exit_code=$?
+
+  if [ $exit_code != 0 ]; then
+    exit $exit_code
+  fi
+}

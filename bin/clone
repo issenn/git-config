@@ -1,0 +1,28 @@
+#!/usr/bin/env zsh
+
+# This script clones the post-clone template and applies it to the
+# target repository.
+
+readonly template=$(mktemp -d /tmp/post-clone.XXXXX)
+
+teardown() {
+    rm -rf "${template}"
+}
+# trap teardown ERR EXIT
+trap teardown EXIT
+
+init() {
+    cd "${template}"
+    git init
+    git remote add origin https://github.com/issenn/git-config.git
+    git fetch origin
+    git checkout --track origin/master
+    cd -
+}
+
+main() {
+    git clone --template="${template}/templates" "$@"
+}
+
+init &>/dev/null
+main "$@"

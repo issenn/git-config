@@ -1,0 +1,41 @@
+#!/usr/bin/env zsh
+
+# This script should be saved in a git repo as a hook file, e.g. .git/hooks/pre-receive.
+# It looks for scripts in the .git/hooks/pre-receive.d directory and executes them in order,
+# passing along stdin. If any script exits with a non-zero status, this script exits.
+
+
+export GIT_DIR=${GIT_DIR:-"$(dirname -- "$(dirname -- "$(realpath $0)")")"}
+
+# load loader
+. "${GIT_DIR}/lib/loader/loader.zsh"
+
+# include directories to search path
+loader_addpath "${GIT_DIR}/lib" "${GIT_DIR}/hooks"
+
+# init logger
+include "${GIT_DIR}/lib/logger/logger.zsh"
+
+# load main script
+# Load the function
+include "${GIT_DIR}/lib/invoke-hooks"
+include "${GIT_DIR}/lib/hooks"
+
+# init env
+include "${GIT_DIR}/lib/env"
+
+readonly hook="$(realpath $0)"
+readonly hook_type="$(basename -- "$(realpath $0)")"
+
+local has_errors=0
+
+main() {
+  invokeClonedReposPreCommitHook
+}
+
+debug "${hook_type}: Hello!"
+main "$@"
+
+loader_finish
+
+exit 0

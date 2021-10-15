@@ -23,3 +23,11 @@ end_of_line = LF
 [**/{.ssh,ssh,.git,git}/**/{,*.ssh.,*.git.}config]
 indent_style = space
 indent_size = 2
+
+[templates/hooks/{post-checkout,post-checkout.d/*,pre-commit,pre-commit.d/*,commit-msg,commit-msg.d/*}]
+indent_style = space
+indent_size = 2
+
+[templates/lib/**/*]
+indent_style = space
+indent_size = 2

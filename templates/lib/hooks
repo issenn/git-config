@@ -1,0 +1,74 @@
+#!/usr/bin/env zsh
+
+
+readonly hook="$(realpath $0)"
+
+
+include "${GIT_DIR}/lib/invoke-hooks"
+
+
+initializeSubmodules() {
+  test ! -e "${repo}/.gitmodules" && return
+  git submodule update --init --recursive
+}
+
+installClonedReposHooks() {
+  cd "${repo}/.git"
+  rm -rf hooks
+  ln -sf ../hooks
+  cd - >/dev/null
+}
+
+invokeClonedReposCloneInitHook() {
+  local -r hook_type="post-init"
+  local -r hook="${repo}/.git/hooks/${hook_type}.d/clone-init"
+  invokeClonedReposHook ${hook_type} ${hook}
+}
+
+invokeClonedReposPostInitHook() {
+  local -r hook_type="post-init"
+  local -r hook_dir="${GIT_DIR}/hooks/${hook_type}.d"
+  invokeClonedReposHookDir ${hook_type} ${hook_dir}
+}
+
+invokeClonedReposPostCloneHook() {
+  local -r hook_type="post-clone"
+  local -r hook_dir="${GIT_DIR}/hooks/${hook_type}.d"
+  invokeClonedReposHookDir ${hook_type} ${hook_dir}
+}
+
+invokeClonedReposPostCheckoutHook() {
+  # initializeSubmodules
+  # installClonedReposHooks
+  does_user_exist || invokeClonedReposCloneInitHook
+  local -r hook_type="post-checkout"
+  local -r hook_dir="${GIT_DIR}/hooks/${hook_type}.d"
+  invokeClonedReposHookDir ${hook_type} ${hook_dir}
+}
+
+invokeClonedReposPreCommitHook() {
+  does_user_exist || { invokeClonedReposCloneInitHook; warn "Please retry ..."; exit 1 }
+  local -r hook_type="pre-commit"
+  local -r hook_dir="${GIT_DIR}/hooks/${hook_type}.d"
+  invokeClonedReposHookDir ${hook_type} ${hook_dir}
+}
+
+invokeClonedReposCommitMsgHook() {
+  local -r hook_type="commit-msg"
+  local -r hook_dir="${GIT_DIR}/hooks/${hook_type}.d"
+  invokeClonedReposHookDir ${hook_type} ${hook_dir} $@
+}
+
+die() {
+  local -r message="$1"
+  local -r exitCode=$2
+  debug "${message}"
+  [[ "${exitCode}" == "" ]] && exit 1 || exit $exitCode
+}
+
+does_user_exist() {
+  local -r GIT_CONFIG_PATH="$(git config --local include.path)"
+  local -r EMAIL="$(git config --local user.email)"
+  local -r NAME="$(git config --local user.name)"
+  [[ -n "${GIT_CONFIG_PATH}" || -n "${EMAIL}" || -n "${NAME}" ]] || return 1
+}
