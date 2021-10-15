@@ -4,7 +4,7 @@
 typeset -x -r repo=$(git rev-parse --show-toplevel)
 readonly hook="$(realpath $0)"
 
-typeset -x loglevel="DEBUG"
+typeset -x loglevel="INFO"
 
 addHookTypes() {
   [[ "${#@[@]}" -ne 1 ]] && return

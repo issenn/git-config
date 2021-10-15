@@ -70,13 +70,13 @@ INPUT
   exit 0
 fi
 
-source "${XDG_CONFIG_HOME:-${HOME}/.config}/git/.git-clone-init"
+. "${XDG_CONFIG_HOME:-${HOME}/.config}/git/.git-clone-init"
 
 if [[ -n "${GIT_CONFIG_PATH}" && -r "${GIT_CONFIG_PATH}" ]]; then
   git config --local --add include.path "${GIT_CONFIG_PATH}"
   EMAIL="$(git config user.email)"
   NAME="$(git config user.name)"
-  echo -e "\nLocal identity for ${PWD##*/} set to \"${NAME} <${EMAIL}>\""
+  info "Local identity for ${PWD##*/} set to \"${NAME} <${EMAIL}>\""
   exit 0
 fi
 
