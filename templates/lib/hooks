@@ -47,7 +47,12 @@ invokeClonedReposPostCheckoutHook() {
 }
 
 invokeClonedReposPreCommitHook() {
-  does_user_exist || { invokeClonedReposCloneInitHook; warn "Please retry ..."; exit 1 }
+  does_user_exist || {
+    warn "Email is not configured to your correct email in the Working directory.";
+    invokeClonedReposCloneInitHook;
+    warn "Please run your command again...";
+    exit 1
+  }
   local -r hook_type="pre-commit"
   local -r hook_dir="${GIT_DIR}/hooks/${hook_type}.d"
   invokeClonedReposHookDir ${hook_type} ${hook_dir}
