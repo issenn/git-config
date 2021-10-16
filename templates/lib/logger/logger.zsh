@@ -53,7 +53,7 @@ function log {
         [[ ${LOG_PRIORITY[${loglevel}]} -le ${LOG_PRIORITY[${logtype}]} ]] && echo -e "\033[0;35m${logformat}\033[0m" ;;
       INFO)
         [[ ${LOG_PRIORITY[${loglevel}]} -le ${LOG_PRIORITY[${logtype}]} ]] && echo -e "\033[0;32m${logformat}\033[0m" ;;
-      WARN)
+      WARN|WARNING)
         [[ ${LOG_PRIORITY[${loglevel}]} -le ${LOG_PRIORITY[${logtype}]} ]] && echo -e "\033[0;33m${logformat}\033[0m" ;;
       ERROR|CRITICAL|SEVERE)
         [[ ${LOG_PRIORITY[${loglevel}]} -le ${LOG_PRIORITY[ERROR]} ]] && echo -e "\033[0;31m${logformat}\033[0m" ;;
