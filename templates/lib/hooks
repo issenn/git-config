@@ -38,6 +38,7 @@ invokeClonedReposPostCloneHook() {
 }
 
 invokeClonedReposPostCheckoutHook() {
+  # rm -rf -- "${repo}/.git/hooks/post-checkout"
   # initializeSubmodules
   # installClonedReposHooks
   does_user_exist || invokeClonedReposCloneInitHook

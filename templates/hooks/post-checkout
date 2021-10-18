@@ -6,7 +6,10 @@
 # path to the newly cloned repo on disk
 
 
-export GIT_DIR=${GIT_DIR:-"$(dirname -- "$(dirname -- "$(realpath $0)")")"}
+echo "GIT_DIR begin: ${GIT_DIR}"  # delete after debug
+echo "${GIT_DIR:-"$(dirname -- "$(dirname -- "$(realpath $0)")")"}"  # delete after debug
+. "${GIT_DIR:-"$(dirname -- "$(dirname -- "$(realpath $0)")")"}/lib/env"
+echo "GIT_DIR finally: ${GIT_DIR}"  # delete after debug
 
 # load loader
 . "${GIT_DIR}/lib/loader/loader.zsh"
@@ -22,17 +25,14 @@ include "${GIT_DIR}/lib/logger/logger.zsh"
 include "${GIT_DIR}/lib/invoke-hooks"
 include "${GIT_DIR}/lib/hooks"
 
-# init env
-include "${GIT_DIR}/lib/env"
+# init config env
+include "${GIT_DIR}/lib/config.env"
 
 readonly hook="$(realpath $0)"
 readonly hook_type="$(basename -- "$(realpath $0)")"
 
 
 main() {
-  # rm -rf -- "${repo}/.git/hooks/post-checkout"
-  # initializeSubmodules
-  # installClonedReposHooks
   invokeClonedReposPostCheckoutHook
 }
 
