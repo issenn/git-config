@@ -6,13 +6,13 @@
 # path to the newly cloned repo on disk
 
 
-echo "GIT_DIR begin: ${GIT_DIR}"  # delete after debug
-echo "${GIT_DIR:-"$(dirname -- "$(dirname -- "$(realpath $0)")")"}"  # delete after debug
-. "${GIT_DIR:-"$(dirname -- "$(dirname -- "$(realpath $0)")")"}/lib/env"
-echo "GIT_DIR finally: ${GIT_DIR}"  # delete after debug
-
 # load loader
-. "${GIT_DIR}/lib/loader/loader.zsh"
+. "${GIT_DIR:-"$(dirname -- "$(dirname -- "$(realpath $0)")")"}/lib/loader/loader.zsh"
+
+# echo "GIT_DIR begin: ${GIT_DIR}"  # delete after debug
+# echo "${GIT_DIR:-"$(dirname -- "$(dirname -- "$(realpath $0)")")"}"  # delete after debug
+include "${GIT_DIR:-"$(dirname -- "$(dirname -- "$(realpath $0)")")"}/lib/env"
+# echo "GIT_DIR finally: ${GIT_DIR}"  # delete after debug
 
 # include directories to search path
 loader_addpath "${GIT_DIR}/lib" "${GIT_DIR}/hooks"

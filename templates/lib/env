@@ -2,6 +2,7 @@
 
 
 # typeset -x -r repo=$(git rev-parse --show-toplevel)
+readonly hook="$(realpath $0)"
 
 getGitDir() {
   # local -r opts=('--git-common-dir' '--absolute-git-dir' '--git-dir')
@@ -10,8 +11,8 @@ getGitDir() {
   git rev-parse --absolute-git-dir
 }
 
-echo "Before set GIT_DIR: ${GIT_DIR}"  # delete after debug
+# echo "Before set GIT_DIR: ${GIT_DIR}"  # delete after debug
 typeset -x GIT_DIR="${GIT_DIR:-$(getGitDir)}"
-echo "After set GIT_DIR: ${GIT_DIR}"  # delete after debug
+# echo "After set GIT_DIR: ${GIT_DIR}"  # delete after debug
 typeset -x GIT_DIR=${GIT_DIR:-"$(dirname -- "$(dirname -- "$(realpath $0)")")"}
-echo "Last set GIT_DIR: ${GIT_DIR}"  # delete after debug
+# echo "Last set GIT_DIR: ${GIT_DIR}"  # delete after debug
