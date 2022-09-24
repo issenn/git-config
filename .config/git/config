@@ -2,4 +2,8 @@
 
 [include]
   path = config.d/base.git.config
+  # path = config.d/alias.git.config
+  path = config.d/color.git.config
   path = config.d/diff-so-fancy.git.config
+  path = config.d/git-crypt.git.config
+  path = config.d/sops.git.config

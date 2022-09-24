@@ -1,1 +1,85 @@
 #!/usr/bin/env zsh
+
+
+# (return 0 2>/dev/null) && SOURCED=1 || SOURCED=0
+# echo "$SOURCED"
+
+# snagged from: https://stackoverflow.com/a/51264222/26510
+# Takes a path argument and returns it as an absolute path.
+# No-op if the path is already absolute.
+toAbsPath() {
+  local target="$1"
+
+  if [ "$target" == "." ]; then
+    echo "$(pwd)"
+  elif [ "$target" == ".." ]; then
+    echo "$(dirname "$(pwd)")"
+  else
+    echo "$(cd "$(dirname "$1")"; pwd)/$(basename "$1")"
+  fi
+}
+
+getScriptDir() {
+  local SOURCED
+  local RESULT
+  (return 0 2>/dev/null) && SOURCED=1 || SOURCED=0
+  echo "$SOURCED"
+}
+# getScriptDir "$0"
+
+testArray() {
+  local -r a=($@)
+  echo "0:" ${a[@]:0:2}
+  echo "0:" ${a[@]:0:(-1)}
+  echo "---"
+  echo "2:" ${@[@]:1}
+  echo "2:" ${@[@]: -1}
+  echo "2:" ${@[@]:(-1)}
+  echo "2:" ${@[@]:1:2}
+  echo "2:" ${@[@]:1:(-1)}
+  echo "2:" ${@[@]:1:(-2)}
+  echo "2:" ${@[@]:2:(-2)}
+  echo "2:" ${@[@]:(-9):(-2)}
+  echo "---"
+  echo "\$*="          ${*[-1]}
+  echo "\"\$*\"="      "${*[-1]}"
+  echo "\$@="          ${@[-1]}
+  echo "\"\$@\"="      "${@[-1]}"
+  echo "---"
+  echo "last: \$*"     ${*: -1}
+  echo "last: \"\$*\"" "${*: -1}"
+  echo "last: \$@"     ${@: -1}
+  echo "last: \"\$@\"" "${@: -1}"
+  echo "---"
+
+  echo "\$*=" $*
+  echo "\"\$*\"=" "$*"
+  echo "\$@=" $@
+  echo "\"\$@\"=" "$@"
+
+  echo "print each param from \$*"
+  for var in $*
+  do
+    echo "$var"
+  done
+
+  echo "print each param from \$@"
+  for var in $@
+  do
+    echo "$var"
+  done
+
+  echo "print each param from \"\$*\""
+  for var in "$*"
+  do
+    echo "$var"
+  done
+
+  echo "print each param from \"\$@\""
+  for var in "$@"
+  do
+    echo "$var"
+  done
+}
+
+testArray The quick brown fox jumps over the lazy dog
