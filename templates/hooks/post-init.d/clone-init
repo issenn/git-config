@@ -66,7 +66,7 @@ case "\${url}" in
 esac
 INPUT
 
-  warnText "Missing file ~/.git-clone-init. Template created..."
+  warnText "Missing file ${XDG_CONFIG_HOME:-${HOME}/.config}/git/.git-clone-init. Template created ..."
   exit 0
 fi
 

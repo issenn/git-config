@@ -22,7 +22,7 @@ chmod +x .config/git/templates/hooks/post-checkout || chmod +x .config/git/templ
 To clone a repository with post-clone hooks::
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/issenn/git-config/master/bin/clone | bash -s -- <normal-clone-args>
+curl -fsSL https://raw.githubusercontent.com/issenn/git-config/master/bin/clone | zsh -s -- <normal-clone-args>
 ```
 
 All arguments will be passed directly to `git clone`.

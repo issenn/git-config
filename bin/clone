@@ -17,6 +17,16 @@ init() {
     git remote add origin https://github.com/issenn/git-config.git
     git fetch origin
     git checkout --track origin/master
+    if [[ ! -f "${XDG_CONFIG_HOME:-${HOME}/.config}/git/config.d/default.git.config" ]]; then
+        mkdir -p "${XDG_CONFIG_HOME:-${HOME}/.config}/git/config.d"
+        cp ".config/git/config.d/default.git.config" "${XDG_CONFIG_HOME:-${HOME}/.config}/git/config.d/default.git.config"
+    fi
+    if [[ ! -f "${XDG_CONFIG_HOME:-${HOME}/.config}/git/config.d/github.git.config" ]]; then
+        cp ".config/git/config.d/github.git.config" "${XDG_CONFIG_HOME:-${HOME}/.config}/git/config.d/github.git.config"
+    fi
+    if [[ ! -f "${XDG_CONFIG_HOME:-${HOME}/.config}/git/.git-clone-init" ]]; then
+        cp .git-clone-init "${XDG_CONFIG_HOME:-${HOME}/.config}/git/.git-clone-init"
+    fi
     cd -
 }
 
