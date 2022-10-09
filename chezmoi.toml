@@ -1,0 +1,5 @@
+sourceDir = "."
+# destDir = "~"
+destDir = "~/.local/share/test/"
+
+verbose = true

@@ -1,0 +1,17 @@
+[ssh.Github]
+    host = "github.com"
+    hostName = "github.com"
+    user = "git"
+    port = "22"
+
+[ssh.IntelliJ]
+    host = "IntelliJ"
+    hostName = "github.com"
+    user = "git"
+    port = "22"
+
+[ssh.ggtoget]
+    host = "gitlab.ggtoget.com"
+    hostName = "172.18.230.207"
+    user = "git"
+    port = "22222"

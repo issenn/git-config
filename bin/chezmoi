@@ -1,0 +1,7 @@
+#!/usr/bin/env zsh
+
+
+# chezmoi apply --config chezmoi.toml \
+#               --persistent-state chezmoistate.boltdb \
+#               --source . \
+#               --destination ~

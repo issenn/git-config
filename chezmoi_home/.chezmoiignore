@@ -1,0 +1,33 @@
+# Comments and blank lines are allowed.
+
+.git
+.gitignore
+.gitmodules
+.gitkeep
+
+.github/
+.editorconfig
+
+/README*
+/LICENSE*
+/COPYING
+*.md
+
+.DS_Store
+.*.example
+
+.stowrc
+.stow-local-ignore
+
+chezmoi.toml
+
+# Custom rules
+
+.config
+.ssh
+symlink_dotfiles.tmpl
+
+# .*.gpg
+# /bin
+# /templates
+# /.git-clone-init
